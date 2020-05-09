@@ -1,0 +1,41 @@
+[
+  {"action": "tryClick",
+    "template": "resource/juqing/wenhao.bmp",
+    "match": "",
+    "team_num": 2,
+    "tryTimes": 0
+  },
+  {"action": "tryClick",
+    "template": "resource/juqing/tiaoguo.bmp",
+    "match": "",
+    "team_num": 2,
+    "tryTimes": 0
+  },
+  {"action": "tryClick",
+    "template": "resource/juqing/jiasu.bmp",
+    "match": "",
+    "team_num": 2,
+    "tryTimes": 0
+  },
+  {"action": "tryClick",
+    "template": "resource/juqing/tiaozhan.bmp",
+    "match": "",
+    "team_num": 2,
+    "tryTimes": 0
+  },{"action": "tryClick",
+    "template": "resource/juqing/zhunbei.bmp",
+    "match": "",
+    "team_num": 2,
+    "tryTimes": 0
+  },{"action": "tryClick",
+    "template": "resource/shengli.bmp",
+    "match": "",
+    "team_num": 2,
+    "tryTimes": 0
+  },{"action": "tryClick",
+    "template": "resource/jiangli.bmp",
+    "match": "",
+    "team_num": 2,
+    "tryTimes": 0
+  }
+]

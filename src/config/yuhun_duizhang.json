@@ -1,0 +1,59 @@
+{
+    "start_module": {
+        "start_module": "add_team"
+    },
+    "challenge":{
+        "action": "click",
+        "template": "template/challenge.bmp",
+        "end": "check_victory"
+    },
+    "check_challenge":{
+        "action": "check",
+        "template": "template/challenge.bmp",
+        "true": "challenge",
+        "false": "sleep0.5"
+    },
+    "victory":{
+        "action": "click",
+        "template": "template/victory.bmp",
+        "end": "check_rewards"
+    },
+    "check_victory":{
+        "action": "check",
+        "template": "template/victory.bmp",
+        "true": "victory",
+        "false": "sleep2"
+    },
+    "rewards":{
+        "action": "click",
+        "template": "template/rewards.bmp",
+        "end": "add_team"
+    },
+    "check_rewards":{
+        "action": "check",
+        "template": "template/rewards.bmp",
+        "true": "rewards",
+        "false": "sleep0.5"
+    },
+    "add_team":{
+        "action": "team",
+        "template": "template/addteam.bmp",
+        "team_num": 2,
+        "end": "check_challenge"
+    },
+    "sleep2":{
+        "action": "sleep",
+        "parent":"",
+        "time_":2
+    },
+    "sleep1":{
+        "action": "sleep",
+        "parent":"",
+        "time_":1
+    },
+    "sleep0.5":{
+        "action": "sleep",
+        "parent":"",
+        "time_":0.5
+    }
+}

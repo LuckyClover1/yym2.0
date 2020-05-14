@@ -151,7 +151,7 @@ def show_selected_config(config_frame):
         config_frame.pack
         #Label.pack_forget(config_frame)
         Label(config_frame, text=text, anchor=NW).place(x=5, y=240 + 30*i, width=300, height=30)
-        Label(config_frame, text="御魂模式需要队长和队友勾选邀请先打一轮，再运行程序！", anchor=NW, fg='red').place(x=5, y=280 + 30*i, width=300, height=30)
+        Label(config_frame, text="御魂模式：\n队长-完成一轮，默认邀请队友后，在组队界面运行程序！\n队员-完成一轮，接受邀请后，运行程序！", anchor=NW, fg='red', justify='left').place(x=5, y=280 + 30*i, width=350, height=90)
         # if value["use_json"].split("-")[0].find("dui") >= 0:
         #     print(value["use_json"])
         #     Label(config_frame, text="御魂模式需要队长和队友勾选邀请打一轮！", anchor=NW, fg='red').place(x=5, y=280 + 30*i, width=300, height=30)

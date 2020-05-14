@@ -53,7 +53,7 @@ class Module(object):
             Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
             print(point)
             time.sleep(0.5)
-            #move_click(point)
+            move_click(point)
             window_capture()
             point = match_template(self.template)
 

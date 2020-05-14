@@ -8,11 +8,9 @@ class Module(object):
     def __init__(self):
         self.module_name = None
         self.action = None
+        self.describe = None
         self.template = None
-        self.end = None
-        self.true = None
-        self.false = None
-        self.parent = None
+        self.next_action = None
         self.time_ = None
         self.team_num = 0
 
@@ -25,20 +23,14 @@ class Module(object):
     def set_action(self, action):
         self.action = action
 
+    def set_describe(self, describe):
+        self.describe = describe
+
     def set_template(self, template):
         self.template = template
 
-    def set_end(self, end):
-        self.end = end
-
-    def set_true(self, true):
-        self.true = true
-
-    def set_false(self, false):
-        self.false = false
-
-    def set_parent(self, parent):
-        self.parent = parent
+    def set_next_action(self, next_action):
+        self.next_action = next_action
 
     def set_time_(self, time_):
         self.time_ = time_
@@ -47,24 +39,26 @@ class Module(object):
         self.team_num = team_num
 
     def check(self):
+        Log.debug("------->【", self.describe, "】开始匹配...")
         window_capture()
         point = match_template(self.template)
-        time.sleep(0.3)
-        if point[0] > 0 and point[1] > 0:
-            return self.true
-        else:
-            return self.false
 
-    def click(self):
-        window_capture()
-        # Log.debug("click " + self.template)
-        point = match_template(self.template)
-        while point[0] > 0 and point[1] > 0:  # 检验是否点击上了
-            move_click(point)
-            time.sleep(0.5)
+        while point[0] == 0 and point[1] == 0 and global_.workFlag:  # 检验是否匹配上,没有匹配上时继续
+            Log.debug("------->【", self.describe, "】匹配中...")
+            time.sleep(0.5)#防止过快匹配校验
             window_capture()
             point = match_template(self.template)
-        return self.end
+        #匹配上时进行点击
+        while point[0] > 0 and point[1] > 0 and global_.workFlag:  # 匹配上后进行点击，当界面未跳转时继续点击
+            Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
+            print(point)
+            time.sleep(0.5)
+            #move_click(point)
+            window_capture()
+            point = match_template(self.template)
+
+        Log.debug("------->【", self.describe, "】完成，进行下一步...")
+        return self.next_action
 
     def team(self):
         if self.team_num == 2:
@@ -84,5 +78,6 @@ class Module(object):
         return self.end
 
     def sleep(self):
+        Log.debug("=======》任务完成！线程等待中...")
         time.sleep(self.time_)
-        return None
+        return self.next_action

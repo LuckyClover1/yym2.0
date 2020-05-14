@@ -51,17 +51,39 @@ def sift_flann_func(template, matchPoint):
 
 
 def match_template(template):
-    img1 = cv2.imread(global_.resources + template, 0)  # 模板
-    img2 = cv2.imread(global_.param.test_img, 0)  # 需要匹配的图片
+    if template.find(",") > 0:
+        tems = template.split(",")
+        for tem in tems:
+            img1 = cv2.imread(global_.resources + tem, 0)  # 模板
+            img2 = cv2.imread(global_.param.test_img, 0)  # 需要匹配的图片
 
-    flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
-    if max_val < 0.9:
+            flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
+            #Log.debug("------->匹配度：",str(max_val))
+            if max_val >= 0.9:
+                th, tw = img1.shape[:2]
+                offset_x = int(random.randint(0, tw))
+                offset_y = int(random.randint(0, th))
+                return max_loc[0] + offset_x, max_loc[1] + offset_y
+
         return 0, 0
-    th, tw = img1.shape[:2]
-    offset_x = int(random.randint(0, tw))
-    offset_y = int(random.randint(0, th))
-    return max_loc[0] + offset_x, max_loc[1] + offset_y
+    else:
+        img1 = cv2.imread(global_.resources + template, 0)  # 模板
+        img2 = cv2.imread(global_.param.test_img, 0)  # 需要匹配的图片
+
+        flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
+        #Log.debug("------->匹配度：",str(max_val))
+        if max_val >= 0.9:
+            th, tw = img1.shape[:2]
+            offset_x = int(random.randint(0, tw))
+            offset_y = int(random.randint(0, th))
+            print(max_loc[0], offset_x, max_loc[1], offset_y)
+            return max_loc[0] + offset_x, max_loc[1] + offset_y
+
+        return 0, 0
+
+
 
 
 

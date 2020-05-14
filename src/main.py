@@ -21,16 +21,19 @@ class MyThread(threading.Thread):
         self.hwnd = hwnd
 
     def run(self):
+
+        print("self.config:"+self.config)
         global_.param.thread_name = self.thread_name
-        Log.debug("线程开始启动...")
+        Log.debug("------->线程开始启动...")
         global_.param.hwnd = self.hwnd
         global_.param.test_img = global_.test_img_path + "test-" + self.thread_name + ".bmp"
         init_modules(self.thread_name, self.config)
         reset_windows_size()
         # queue_click()
         try:
+            print("开始方法："+global_.param.start_module_name)
             execute_(global_.param.start_module_name)
-        except e:
+        except Exception:
             Log.error()
 
 
@@ -49,6 +52,7 @@ def create_threads():
 
 def stop():
     global_.workFlag = False
+    Log.debug("-------任务停止------")
 
 
 # 启动线程
@@ -59,48 +63,66 @@ def start_work():
 
 # 初始化本次执行的工作配置
 def init_modules(thread_name, config):
-    Log.debug("加载配置文件 ", config)
+    #Log.debug("加载配置文件 ", config)
     dict_ = read_json(config)
     global_.param.modules = {}
     for module_key in dict_:
         # module
         module = Module()
+        if module_key == "module_type" :
+            continue
         json_ = dict_[module_key]
         for key in json_:
             func = getattr(module, "set_" + key)
             func(json_[key])
         module.set_module_name(module_key)
         global_.param.modules.update({module_key: module})
+        print(global_.param.modules)
     Log.debug("配置文件加载结束")
 
 
 # 启动方法，点击开始按钮
 def start_up():
-    if global_.workFlag:
-        return False
+    # if global_.workFlag:
+    #     return False
     global_.workFlag = True
     create_threads()
     start_work()
     return True
 
-
 # 执行工作
 def execute_(module_name):
+    '''
+    JSON配置格式：
+     "check_victory":{
+        "action": "check",
+        "template": "template/victory.bmp",
+        "end": "victory",
+     }
+    工作逻辑：
+    1、通过module_name(check_victory)获取执行模块的信息
+    2、获取模块中action(check)，进行执行
+    '''
+    print("module_name:"+module_name)
     module = global_.param.modules.get(module_name)
     while global_.workFlag:
-        func = getattr(module, module.action)
+        Log.debug("------->当前事件："+module.describe)
+        func = getattr(module, module.action) #getattr 从module中获取module.action函数
         next_module_name = func()
-        Log.debug(module.action, module.module_name, "==>", next_module_name)
+        next_module = global_.param.modules.get(next_module_name)
+        Log.debug(module.describe, "------->下一个事件：", next_module.describe)
         # 睡眠操作，记录上一次的操作
-        if module.module_name.find("sleep") < 0:
-            global_.param.last_module = module.module_name
-        if next_module_name is not None:
-            if next_module_name.find("sleep") < 0:
-                global_.param.last_module = next_module_name
-            else:
-                # sleep
-                module = global_.param.modules.get(next_module_name)
-                continue
-        next_module_name = global_.param.last_module
+        # if module.module_name.find("sleep") < 0:
+        #     global_.param.last_module = module.module_name
+        # if next_module_name is not None:
+        #     if next_module_name.find("sleep") < 0:
+        #         global_.param.last_module = next_module_name
+        #     else:
+        #         # sleep
+        #         module = global_.param.modules.get(next_module_name)
+        #         continue
+        #next_module_name = global_.param.last_module
+        if module.module_name.find("sleep") >= 0:
+            next_module_name = global_.param.start_module_name
         module = global_.param.modules.get(next_module_name)
-    Log.debug("程序停止")
+    Log.debug("------->程序停止<-------")

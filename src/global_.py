@@ -17,7 +17,7 @@ workFlag = False
 window_hwnd_arr = []
 config_file_arr = []
 configs = []
-
+configs_dsc = []
 log = None
 
 queue_ = queue.Queue

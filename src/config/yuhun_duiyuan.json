@@ -1,42 +1,25 @@
 {
+    "module_type": "yuhun_duiyuan.json-御魂(队员)",
     "start_module": {
+        "describe": "御魂流程：胜利结算->奖励领取->下轮等待->胜利结算...",
         "start_module": "check_victory"
-    },
-    "victory":{
-        "action": "click",
-        "template": "template/victory.bmp",
-        "end": "check_rewards"
     },
     "check_victory":{
         "action": "check",
-        "template": "template/victory.bmp",
-        "true": "victory",
-        "false": "sleep1"
-    },
-    "rewards":{
-        "action": "click",
-        "template": "template/rewards.bmp",
-        "end": "check_victory"
+        "describe": "胜利结算",
+        "template": "template/end1.bmp,template/end2.bmp",
+        "next_action": "check_rewards"
     },
     "check_rewards":{
         "action": "check",
-        "template": "template/rewards.bmp",
-        "true": "rewards",
-        "false": "sleep0.5"
+        "describe": "奖励领取",
+        "template": "template/end3.bmp",
+        "next_action": "sleep"
     },
-    "sleep2":{
+    "sleep":{
         "action": "sleep",
-        "parent":"",
-        "time_":2
-    },
-    "sleep1":{
-        "action": "sleep",
-        "parent":"",
-        "time_":1
-    },
-    "sleep0.5":{
-        "action": "sleep",
-        "parent":"",
-        "time_":0.5
+        "describe": "一轮结束，休息会...",
+        "time_":20,
+        "next_action": "check_victory"
     }
 }

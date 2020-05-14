@@ -13,11 +13,13 @@ def read_json(file):
 
 
 def list_config():
+    Log.debug("json文件路径：", global_.config_path)
     files = os.listdir(global_.config_path)
     if len(files):
         for file in files:
             if file == "config.json":
                 continue
-            global_.config_file_arr.append(file)
+            file_josn = read_json(file)
+            global_.config_file_arr.append(file_josn["module_type"])
 
 

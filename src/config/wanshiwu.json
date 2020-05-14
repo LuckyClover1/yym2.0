@@ -1,4 +1,5 @@
 {
+    "module_type": "wanshiwu.json-万事屋",
     "shengli":{
         "action": "click",
         "template": "template/shengli.bmp",

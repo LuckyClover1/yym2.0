@@ -1,0 +1,31 @@
+{
+    "module_type": "exploring_dashou.json-探索(打手)",
+    "start_module": {
+        "describe": "御魂流程：组队探索中/战斗中(准备->胜利结算-奖励领取)/离队探索中(退出)",
+        "start_module": "check_team_exploring"
+    },
+    "check_team_exploring":{
+        "action": "check2",
+        "describe": "组队探索中...",
+        "template": "exploring/end1.bmp,exploring/end2.bmp",
+        "next_action": "check_rewards"
+    },
+    "check_out_team_exploring":{
+        "action": "check2",
+        "describe": "离队探索中...",
+        "template": "exploring/team.bmp,template/exploring.bmp",
+        "next_action": "check_out"
+    },
+    "check_out":{
+        "action": "check2",
+        "describe": "退出探索...",
+        "template": "exploring/team.bmp,template/exploring.bmp",
+        "next_action": "check_invitation"
+    },
+    "check_invitation":{
+        "action": "check2",
+        "describe": "等待邀请...",
+        "template": "exploring/team.bmp,template/exploring.bmp",
+        "next_action": "check_out"
+    }
+}

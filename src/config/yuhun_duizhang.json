@@ -1,59 +1,31 @@
 {
+    "module_type": "yuhun_duizhang.json-御魂(队长)",
     "start_module": {
-        "start_module": "add_team"
-    },
-    "challenge":{
-        "action": "click",
-        "template": "template/challenge.bmp",
-        "end": "check_victory"
+        "describe": "御魂流程：挑战->挑战等待->胜利结算->奖励领取->挑战...",
+        "start_module": "check_challenge"
     },
     "check_challenge":{
         "action": "check",
-        "template": "template/challenge.bmp",
-        "true": "challenge",
-        "false": "sleep0.5"
+        "describe": "开始挑战",
+        "template": "template/start.bmp",
+        "next_action": "sleep"
     },
-    "victory":{
-        "action": "click",
-        "template": "template/victory.bmp",
-        "end": "check_rewards"
+    "sleep":{
+        "action": "sleep",
+        "describe": "挑战中，请耐心等待...",
+        "time_":20,
+        "next_action": "check_victory"
     },
     "check_victory":{
         "action": "check",
-        "template": "template/victory.bmp",
-        "true": "victory",
-        "false": "sleep2"
-    },
-    "rewards":{
-        "action": "click",
-        "template": "template/rewards.bmp",
-        "end": "add_team"
+        "describe": "胜利结算",
+        "template": "template/end1.bmp,template/end2.bmp",
+        "next_action": "check_rewards"
     },
     "check_rewards":{
         "action": "check",
-        "template": "template/rewards.bmp",
-        "true": "rewards",
-        "false": "sleep0.5"
-    },
-    "add_team":{
-        "action": "team",
-        "template": "template/addteam.bmp",
-        "team_num": 2,
-        "end": "check_challenge"
-    },
-    "sleep2":{
-        "action": "sleep",
-        "parent":"",
-        "time_":2
-    },
-    "sleep1":{
-        "action": "sleep",
-        "parent":"",
-        "time_":1
-    },
-    "sleep0.5":{
-        "action": "sleep",
-        "parent":"",
-        "time_":0.5
+        "describe": "奖励领取",
+        "template": "template/end3.bmp",
+        "next_action": "check_challenge"
     }
 }

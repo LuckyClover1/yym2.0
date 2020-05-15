@@ -1,4 +1,5 @@
-.idea/
-src/test/
-build/
-dist/
+.idea/*
+application/*
+src/test/*
+src/build/*
+src/dist/*

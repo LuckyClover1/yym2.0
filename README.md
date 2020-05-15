@@ -6,3 +6,5 @@
 
 ## 打包成exe可执行文件
 运行`src/package.sh`
+
+查看dist目录

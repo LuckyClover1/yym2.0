@@ -3,3 +3,4 @@ application/*
 src/test/*
 src/build/*
 src/dist/*
+src/__pycache__/*

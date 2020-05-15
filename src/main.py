@@ -69,7 +69,7 @@ def init_modules(thread_name, config):
     for module_key in dict_:
         # module
         module = Module()
-        if module_key == "module_type" :
+        if module_key == "module_type":
             continue
         json_ = dict_[module_key]
         for key in json_:

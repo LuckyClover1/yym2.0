@@ -12,8 +12,10 @@ from src.main import *
 from src.tklog import TkLog
 from src.tklog import Log
 
-wins  = {}
+wins = {}
 models = {}
+
+
 class Base:
     def __init__(self):
         self.root = Tk()
@@ -68,13 +70,16 @@ class Home:
 
 
 def start_up_():
-    if start_up(): #开始方法 --main
+    if start_up():  # 开始方法 --main
         Log.debug("程序启动完毕！")
     else:
         show_info("程序已经在运行！")
+
+
 def stop_():
     stop()
-    #Log.debug("程序结束！")
+    # Log.debug("程序结束！")
+
 
 class Setting:
     def __init__(self, parent):
@@ -95,19 +100,20 @@ class Setting:
         Button(self.frame, text="刷新/加载", command=lambda: reload(self)).place(x=5, y=5, width=60, height=30)
 
         list_box_window = Listbox(self.frame, selectmode=SINGLE)
-        if len(global_.window_hwnd_arr) > 0: #窗口id
+        if len(global_.window_hwnd_arr) > 0:  # 窗口id
+            i = 1
             for hwnd in global_.window_hwnd_arr:
-                i = 1
-                win_des = "阴阳师窗口"+str(i)
-                list_box_window.insert(hwnd, "window:" + win_des)#阴阳师窗口id
+                win_des = "阴阳师窗口" + str(i)
+                list_box_window.insert(hwnd, "window:" + win_des)  # 阴阳师窗口id
                 self.window_des[win_des] = hwnd
-        list_box_window.bind('<ButtonRelease-1>', self.select_window)#select_window 激活窗口
+                i = i+1
+        list_box_window.bind('<ButtonRelease-1>', self.select_window)  # select_window 激活窗口
         list_box_window.place(x=5, y=40, width=200, height=150)
 
         list_box_config = Listbox(self.frame, selectmode=SINGLE)
         if len(global_.window_hwnd_arr) > 0:
             i = 0
-            for config_file in global_.config_file_arr:#加載json
+            for config_file in global_.config_file_arr:  # 加載json
                 cof = config_file.split("-")
                 list_box_config.insert(i, cof[1])
                 self.config_des[cof[1]] = cof[0]
@@ -125,8 +131,8 @@ class Setting:
     def select_window(self, event):
         window = event.widget.get(event.widget.curselection()[0])
         window = window.replace("window:", "")
-        #window = self.window_des[window]
-        active_window(int(self.window_des[window])) #激活窗口 --ui
+        # window = self.window_des[window]
+        active_window(int(self.window_des[window]))  # 激活窗口 --ui
         self.window = window
 
     def select_config(self, event):
@@ -149,22 +155,23 @@ def show_selected_config(config_frame):
         window_ = int(value["window"].split("-")[0])
         text = value["window"].split("-")[1] + " : " + value["use_json"].split("-")[1]
         config_frame.pack
-        #Label.pack_forget(config_frame)
-        Label(config_frame, text=text, anchor=NW).place(x=5, y=240 + 30*i, width=300, height=30)
-        Label(config_frame, text="御魂模式：\n队长-完成一轮，默认邀请队友后，在组队界面运行程序！\n队员-完成一轮，接受邀请后，运行程序！", anchor=NW, fg='red', justify='left').place(x=5, y=280 + 30*i, width=350, height=90)
+        # Label.pack_forget(config_frame)
+        Label(config_frame, text=text, anchor=NW).place(x=5, y=240 + 30 * i, width=300, height=30)
+        Label(config_frame, text="御魂模式：\n队长-完成一轮，默认邀请队友后，在组队界面运行程序！\n队员-完成一轮，接受邀请后，运行程序！", anchor=NW, fg='red',
+              justify='left').place(x=5, y=280 + 30 * i, width=350, height=90)
         # if value["use_json"].split("-")[0].find("dui") >= 0:
         #     print(value["use_json"])
         #     Label(config_frame, text="御魂模式需要队长和队友勾选邀请打一轮！", anchor=NW, fg='red').place(x=5, y=280 + 30*i, width=300, height=30)
         Button(config_frame, text="检查", command=lambda window_=window_: active_window(window_)) \
-            .place(x=310, y=240 + 30*i, width=40, height=30)
+            .place(x=310, y=240 + 30 * i, width=40, height=30)
         i = i + 1
 
 
 def create_ui():
     print("加载初始数据")
     global_.param.thread_name = "thread-main"
-    list_windows() #获取所有窗口 --ui
-    list_config() #加载json文件 --file_func
+    list_windows()  # 获取所有窗口 --ui
+    list_config()  # 加载json文件 --file_func
     root = Base()
     # root.root.protocol("WM_DELETE_WINDOW", on_closing)
     root.root.mainloop()
@@ -183,8 +190,7 @@ def reload(self):
 
 
 def copy_right():
-    # messagebox.showinfo("版权", "© 2020 Clover")
-    window_capture()
+    messagebox.showinfo("版权", "© 2020 Clover")
 
 
 def show_info(message):

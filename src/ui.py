@@ -6,6 +6,7 @@ import os
 import sys
 import time
 import threading
+
 current_path = os.path.abspath(os.path.dirname(__file__))
 root_path = os.path.split(current_path)[0]
 sys.path.append(root_path)
@@ -26,9 +27,9 @@ def get_react_(hwnd):
     try:
         rate = 1
         # 获取句柄窗口的大小信息
-        print("获取句柄窗口的大小信息")
+        # print("获取句柄窗口的大小信息")
         left, top, right, bot = win32gui.GetWindowRect(hwnd)
-        print(left, top, right, bot)
+        # print(left, top, right, bot)
         top = int(top * rate)
         left = int(left * rate)
         right = int(right * rate)
@@ -74,6 +75,7 @@ def window_capture():
     finally:
         lock.release()
 
+
 def move_click(point):
     lock.acquire()
     try:
@@ -116,20 +118,24 @@ def reset_windows_size():
     finally:
         lock.release()
 
-#激活窗口，并置顶
+
+# 激活窗口，并置顶
 def active_window(hwnd):
     lock.acquire()
     try:
         left, top, right, bot = get_react_(hwnd)
-        win32gui.SetWindowPos(hwnd, win32con.HWND_NOTOPMOST, left, top, right-left, bot-top, win32con.SWP_SHOWWINDOW)
+        win32gui.SetWindowPos(hwnd, win32con.HWND_NOTOPMOST, left, top, right - left, bot - top,
+                              win32con.SWP_SHOWWINDOW)
     finally:
         lock.release()
 
-#遍历所有窗口
+
+# 遍历所有窗口
 def list_windows():
     win32gui.EnumWindows(win_enum_handler, None)
 
-#获取阴阳师窗口，放入全局中
+
+# 获取阴阳师窗口，放入全局中
 def win_enum_handler(hwnd, ctx):
     if win32gui.IsWindowVisible(hwnd):
         text = win32gui.GetWindowText(hwnd)

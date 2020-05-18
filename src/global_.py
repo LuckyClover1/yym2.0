@@ -6,7 +6,7 @@ import queue
 param = threading.local()
 
 local = os.path.dirname(os.path.realpath(sys.argv[0])) + "\\"
-test_img_path = local + 'test\\'
+capture_img_path = local + 'resources\\capture\\'
 resources = local + 'resources\\'
 config_path = local + 'config\\'
 

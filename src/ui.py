@@ -26,9 +26,7 @@ def get_react_(hwnd):
     try:
         rate = 1
         # 获取句柄窗口的大小信息
-        print("获取句柄窗口的大小信息")
         left, top, right, bot = win32gui.GetWindowRect(hwnd)
-        print(left, top, right, bot)
         top = int(top * rate)
         left = int(left * rate)
         right = int(right * rate)
@@ -64,7 +62,7 @@ def window_capture():
         saveDC.SelectObject(saveBitMap)
         # 保存bitmap到内存设备描述表
         saveDC.BitBlt((0, 0), (width, height), mfcDC, (left, top), win32con.SRCCOPY)
-        saveBitMap.SaveBitmapFile(saveDC, global_.param.test_img)
+        saveBitMap.SaveBitmapFile(saveDC, global_.param.capture_img)
 
         win32gui.DeleteObject(saveBitMap.GetHandle())
         mfcDC.DeleteDC()
@@ -77,7 +75,6 @@ def window_capture():
 def move_click(point):
     lock.acquire()
     try:
-        # global_.queue_.put(point)
         make_long = win32api.MAKELONG(point[0], point[1])
         hwnd = global_.param.hwnd
         win32api.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, make_long)  # 模拟鼠标按下
@@ -139,10 +136,10 @@ def win_enum_handler(hwnd, ctx):
 
 if __name__ == '__main__':
     # global_.param.thread_name = "test_ui"
-    # global_.param.test_img = global_.test_img_path + "test-test_ui" + ".bmp"
+    # global_.param.capture_img = global_.capture_img_path + "test-test_ui" + ".bmp"
     # global_.param.hwnd = 329572
     # window_capture()
-    # global_.param.test_img = global_.test_img_path + "test-test_ui2" + ".bmp"
+    # global_.param.capture_img = global_.capture_img_path + "test-test_ui2" + ".bmp"
     # global_.param.hwnd = 394932
     # window_capture()
     global_.param.hwnd = 329572

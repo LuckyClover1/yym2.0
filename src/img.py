@@ -6,7 +6,7 @@ from src.tklog import Log
 
 def sift_flann_func(template, matchPoint):
     img1 = cv2.imread(global_.local + template, 0)  # queryImage
-    img2 = cv2.imread(global_.param.test_img, 0)  # trainImage
+    img2 = cv2.imread(global_.param.capture_img, 0)  # trainImage
     if matchPoint is None:
         matchPoint = 5
     sift = cv2.xfeatures2d.SIFT_create()
@@ -49,13 +49,13 @@ def sift_flann_func(template, matchPoint):
     matchY = int(y_0 / p_count)
     return (matchX, matchY)
 
-
+#御魂匹配规则
 def match_template(template):
     if template.find(",") > 0:
         tems = template.split(",")
         for tem in tems:
             img1 = cv2.imread(global_.resources + tem, 0)  # 模板
-            img2 = cv2.imread(global_.param.test_img, 0)  # 需要匹配的图片
+            img2 = cv2.imread(global_.param.capture_img, 0)  # 需要匹配的图片
 
             flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
@@ -69,20 +69,65 @@ def match_template(template):
         return 0, 0
     else:
         img1 = cv2.imread(global_.resources + template, 0)  # 模板
-        img2 = cv2.imread(global_.param.test_img, 0)  # 需要匹配的图片
+        img2 = cv2.imread(global_.param.capture_img, 0)  # 需要匹配的图片
 
         flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
         #Log.debug("------->匹配度：",str(max_val))
         if max_val >= 0.9:
             th, tw = img1.shape[:2]
-            offset_x = int(random.randint(0, tw))
-            offset_y = int(random.randint(0, th))
-            print(max_loc[0], offset_x, max_loc[1], offset_y)
-            return max_loc[0] + offset_x, max_loc[1] + offset_y
+            if template.find("out") > 0: #解决退出图标太小,2倍缩小尺寸大小的坐标
+                offset_x = int(random.randint(0, tw//2))
+                offset_y = int(random.randint(0, th//2))
+                return max_loc[0] + offset_x, max_loc[1] + offset_y
+            else:
+                offset_x = int(random.randint(0, tw))
+                offset_y = int(random.randint(0,th ))
+                return max_loc[0] + offset_x, max_loc[1] + offset_y
 
         return 0, 0
 
+#探索匹配规则-离队状态
+def match_template2(template):
+    if template.find(",") > 0:
+        tems = template.split(",")
+        i = 0
+        team = 0
+        exploring = 0
+        for tem in tems:
+            img1 = cv2.imread(global_.resources + tem, 0)  # 模板
+            img2 = cv2.imread(global_.param.capture_img, 0)  # 需要匹配的图片
+
+            flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
+            if i == 0:
+                team = max_val
+            else:
+                exploring = max_val
+            i = i + 1
+        #print("组队-----------------")
+        #print(team, exploring)
+        if team < 0.85 and exploring >= 0.9: #没组队图标和在探索中，说明是离队状态
+            return 1, 1
+        else:
+            return 0, 0
+
+    else:
+        img1 = cv2.imread(global_.resources + template, 0)  # 模板
+        img2 = cv2.imread(global_.param.capture_img, 0)  # 需要匹配的图片
+
+        flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
+
+        #Log.debug("------->匹配度：",str(max_val))
+        if max_val >= 0.9:
+            th, tw = img1.shape[:2]
+            offset_x = int(random.randint(0, tw))
+            offset_y = int(random.randint(0, th))
+            print( max_loc[0] + offset_x, max_loc[1] + offset_y)
+            return max_loc[0] + offset_x, max_loc[1] + offset_y
+
+        return 0, 0
 
 
 

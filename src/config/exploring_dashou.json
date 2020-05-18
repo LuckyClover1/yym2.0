@@ -1,31 +1,64 @@
 {
     "module_type": "exploring_dashou.json-探索(打手)",
     "start_module": {
-        "describe": "御魂流程：组队探索中/战斗中(准备->胜利结算-奖励领取)/离队探索中(退出)",
-        "start_module": "check_team_exploring"
-    },
-    "check_team_exploring":{
-        "action": "check2",
-        "describe": "组队探索中...",
-        "template": "exploring/end1.bmp,exploring/end2.bmp",
-        "next_action": "check_rewards"
-    },
-    "check_out_team_exploring":{
-        "action": "check2",
-        "describe": "离队探索中...",
-        "template": "exploring/team.bmp,template/exploring.bmp",
-        "next_action": "check_out"
-    },
-    "check_out":{
-        "action": "check2",
-        "describe": "退出探索...",
-        "template": "exploring/team.bmp,template/exploring.bmp",
-        "next_action": "check_invitation"
+        "describe": "御魂流程：接受邀请->在探索中：是否离队(是：退出->确定->等待邀请， 否：准备->胜利结算->奖励领取-是否离队)",
+        "start_module": "check_invitation"
     },
     "check_invitation":{
         "action": "check2",
-        "describe": "等待邀请...",
-        "template": "exploring/team.bmp,template/exploring.bmp",
-        "next_action": "check_out"
+        "describe": "等待邀请",
+        "template": "exploring/invitation.bmp",
+        "true": "check_out_team_exploring",
+        "false": "check_invitation",
+        "remarks": "接受邀请成功->进入探索，检测是否离队状态；失败->继续等待邀请"
+    },
+    "check_out_team_exploring":{
+        "action": "check2",
+        "describe": "检测是否离队探索",
+        "template": "exploring/team.bmp,exploring/exploring.bmp",
+        "true": "check_out",
+        "false": "check_ready",
+        "remarks": "离队中->退出探索；队伍中->准备/战斗"
+    },
+    "check_out":{
+        "action": "check2",
+        "describe": "退出探索",
+        "template": "exploring/out.bmp",
+        "true": "check_confirm",
+        "false": "check_out",
+        "remarks": "退出成功->确认退出；退出失败->继续退出"
+    },
+    "check_confirm":{
+        "action": "check2",
+        "describe": "确定退出",
+        "template": "exploring/confirm.bmp",
+        "true": "check_invitation",
+        "false": "check_confirm",
+        "remarks": "退出成功->等待邀请；退出失败->继续退出"
+    },
+    "check_ready": {
+        "action": "check2",
+        "describe": "准备/战斗中",
+        "template": "exploring/ready.bmp",
+        "true": "check_victory",
+        "false": "check_ready",
+        "callback": "check_out_team_exploring",
+        "remarks": "已准备->胜利结算；未准备->继续进行准备；长久未进入战斗状态->检测是否离队"
+    },
+    "check_victory":{
+        "action": "check2",
+        "describe": "胜利结算",
+        "template": "yuhun/end1.bmp,yuhun/end2.bmp",
+        "true": "check_rewards",
+        "false": "check_victory",
+        "remarks": "结算完成->奖励领取；结算未完成->继续结算"
+    },
+    "check_rewards":{
+        "action": "check2",
+        "describe": "奖励领取",
+        "template": "yuhun/end3.bmp",
+        "true": "check_out_team_exploring",
+        "false": "check_rewards",
+        "remarks": "领取完成->检测是否离队；领取未完成->继续领取"
     }
 }

@@ -99,11 +99,13 @@ class Setting:
 
         list_box_window = Listbox(self.frame, selectmode=SINGLE)
         if len(global_.window_hwnd_arr) > 0: #窗口id
+            i = 1
             for hwnd in global_.window_hwnd_arr:
-                i = 1
+                print(hwnd)
                 win_des = "阴阳师窗口"+str(i)
                 list_box_window.insert(hwnd, win_des)#阴阳师窗口id
                 self.window_des[win_des] = hwnd
+                i = i + 1
         list_box_window.bind('<ButtonRelease-1>', self.select_window)#select_window 激活窗口
         list_box_window.place(x=5, y=50, width=200, height=150)
 
@@ -154,7 +156,7 @@ def show_selected_config(config_frame):
         config_frame.pack
         #Label.pack_forget(config_frame)
         Label(config_frame, text=text, anchor=NW, fg='blue').place(x=5, y=220 + 30*i, width=300, height=20)
-        Label(config_frame, text="御魂模式：\n队长-完成一轮，默认邀请队友后，在组队界面运行程序！\n队员-完成一轮，接受邀请后，运行程序！", anchor=NW, fg='red', justify='left').place(x=5, y=280 + 30*i, width=350, height=90)
+        Label(config_frame, text="御魂模式：\n【队长】组队完成一轮，默认邀请队友后，在组队界面运行程序！\n【队员】组队完成一轮，接受邀请后，运行程序！", anchor=NW, fg='red', justify='left').place(x=5, y=280 + 30*i, width=350, height=90)
         # if value["use_json"].split("-")[0].find("dui") >= 0:
         #     print(value["use_json"])
         #     Label(config_frame, text="御魂模式需要队长和队友勾选邀请打一轮！", anchor=NW, fg='red').place(x=5, y=280 + 30*i, width=300, height=30)

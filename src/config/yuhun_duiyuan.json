@@ -7,13 +7,13 @@
     "check_victory":{
         "action": "check",
         "describe": "胜利结算",
-        "template": "template/end1.bmp,template/end2.bmp",
+        "template": "yuhun/end1.bmp,yuhun/end2.bmp",
         "next_action": "check_rewards"
     },
     "check_rewards":{
         "action": "check",
         "describe": "奖励领取",
-        "template": "template/end3.bmp",
+        "template": "yuhun/end3.bmp",
         "next_action": "sleep"
     },
     "sleep":{

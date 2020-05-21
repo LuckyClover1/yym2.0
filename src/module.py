@@ -68,8 +68,8 @@ class Module(object):
         #匹配上时进行点击
         while point[0] > 0 and point[1] > 0 and global_.workFlag:
             Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
-            time.sleep(0.5)
             move_click(point)
+            time.sleep(0.5)
             window_capture()
             point = match_template(self.template)
 
@@ -132,6 +132,59 @@ class Module(object):
             Log.debug("------->【", self.describe, "】完成，进行下一步...")
             return self.true
 
+    #御灵
+    def check4(self):
+        Log.debug("------->【", self.describe, "】开始匹配...")
+        window_capture()
+        point = match_template(self.template)
+
+        while point[0] == 0 and point[1] == 0 and global_.workFlag:  # 检验是否匹配上,没有匹配上时继续
+            time.sleep(0.5) #防止过快匹配校验
+            Log.debug("------->【", self.describe, "】匹配中...")
+            if self.callback is not None: #失败和胜利界面循环匹配
+                return self.callback
+            window_capture()
+            point = match_template(self.template)
+        #匹配上时进行点击
+        while point[0] > 0 and point[1] > 0 and global_.workFlag:
+            Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
+            time.sleep(0.5)
+            if self.template.find("attack") > 0:
+                print(point)
+            move_click(point)
+            if self.template.find("medal") > 0: #突破时，只点击一次，就弹出进攻界面
+                return self.next_action
+            window_capture()
+            point = match_template(self.template)
+
+        Log.debug("------->【", self.describe, "】完成，进行下一步...")
+        return self.next_action
+
+    #结界突破
+    def check5(self):
+        Log.debug("------->【", self.describe, "】开始匹配...")
+        window_capture()
+        point = match_template(self.template)
+
+        while point[0] == 0 and point[1] == 0 and global_.workFlag:  # 检验是否匹配上,没有匹配上时继续
+            time.sleep(0.5) #防止过快匹配校验
+            Log.debug("------->【", self.describe, "】匹配中...")
+            window_capture()
+            point = match_template(self.template)
+        #匹配上时进行点击
+        while point[0] > 0 and point[1] > 0 and global_.workFlag:
+            Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
+            time.sleep(0.5)
+            if self.template.find("attack") > 0:
+                print(point)
+            move_click(point)
+            if self.template.find("medal") > 0: #突破时，只点击一次，就弹出进攻界面
+                return self.next_action
+            window_capture()
+            point = match_template(self.template)
+
+        Log.debug("------->【", self.describe, "】完成，进行下一步...")
+        return self.next_action
 
     def sleep(self):
         Log.debug("=======》任务完成！线程等待中...")

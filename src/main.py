@@ -31,7 +31,6 @@ class MyThread(threading.Thread):
         reset_windows_size()
         # queue_click()
         try:
-            print("开始方法："+global_.param.start_module_name)
             execute_(global_.param.start_module_name)
         except Exception:
             Log.error()
@@ -62,12 +61,13 @@ def start_work():
         print(global_.reward_threads)
         thread.start()
 
-    for reward_thread in global_.reward_threads:
-        thread_name = reward_thread.split(",")[0]
-        hwnd = reward_thread.split(",")[1]
-        #同时运行悬赏封印线程
-        t = threading.Thread(target=check_reward, args=(thread_name, hwnd))
-        t.start()
+    if global_.rewardFlag:
+        for reward_thread in global_.reward_threads:
+            thread_name = reward_thread.split(",")[0]
+            hwnd = reward_thread.split(",")[1]
+            #同时运行悬赏封印线程
+            t = threading.Thread(target=check_reward, args=(thread_name, hwnd))
+            t.start()
 
 
 # 初始化本次执行的工作配置
@@ -78,7 +78,7 @@ def init_modules(thread_name, config):
     for module_key in dict_:
         # module
         module = Module()
-        if module_key == "module_type":
+        if module_key == "module_type" :
             continue
         json_ = dict_[module_key]
         for key in json_:

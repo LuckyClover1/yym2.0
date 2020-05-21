@@ -18,6 +18,10 @@ def list_config():
     if len(files):
         for file in files:
             if file == "config.json":
+                file_josn = read_json(file)
+                global_.rewardFlag = file_josn["reward"]
+                continue
+            if file == "wanshiwu.json" or file == "boundary.json":
                 continue
             file_josn = read_json(file)
             global_.config_file_arr.append(file_josn["module_type"])

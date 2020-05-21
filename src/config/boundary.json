@@ -1,0 +1,56 @@
+{
+    "module_type": "boundary.json-结界突破(暂不支持)",
+    "start_module": {
+        "describe": "结界突破流程：选择突破->进攻->准备->胜利结算->奖励领取->选择突破...(第8次时，先退出4次再突破)",
+        "start_module": "check_select"
+    },
+    "check_select":{
+        "action": "check5",
+        "describe": "选择突破",
+        "template": "boundary/medal.bmp,boundary/nomedal.bmp",
+        "next_action": "check_attack"
+    },
+    "check_attack":{
+        "action": "check5",
+        "describe": "突破进攻",
+        "template": "boundary/attack1.bmp",
+        "callback": "check_select",
+        "next_action": "check_ready"
+    },
+    "check_ready":{
+        "action": "check5",
+        "describe": "突破准备",
+        "template": "boundary/ready.bmp",
+        "next_action": "check_victory"
+    },
+    "check_victory":{
+        "action": "check5",
+        "describe": "胜利结算",
+        "template": "yuhun/end1.bmp,yuhun/end2.bmp",
+        "next_action": "check_rewards"
+    },
+    "check_rewards":{
+        "action": "check5",
+        "describe": "奖励领取",
+        "template": "yuhun/end3.bmp",
+        "next_action": "check_select"
+    },
+    "check_back":{
+        "action": "check5",
+        "describe": "突破退出",
+        "template": "boundary/back.bmp",
+        "next_action": "check_confirm"
+    },
+    "check_confirm":{
+        "action": "check3",
+        "describe": "确定退出",
+        "template": "boundary/confirm.bmp",
+        "next_action": "check_fail"
+    },
+    "check_fail":{
+        "action": "check3",
+        "describe": "失败确认",
+        "template": "boundary/fail.bmp",
+        "next_action": "select"
+    }
+}

@@ -55,8 +55,11 @@ def match_template(template):
         tems = template.split(",")
         for tem in tems:
             img1 = cv2.imread(global_.resources + tem, 0)  # 模板
-            img2 = cv2.imread(global_.param.capture_img, 0)  # 需要匹配的图片
 
+            img2 = cv2.imread(global_.param.capture_img, 0)  # 需要匹配的图片
+            img1 = cv2.cvtColor(img1, cv2.COLOR_GRAY2BGR);
+
+            img2 = cv2.cvtColor(img2, cv2.COLOR_GRAY2BGR);
             flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
             #Log.debug("------->匹配度：",str(max_val))
@@ -70,13 +73,14 @@ def match_template(template):
     else:
         img1 = cv2.imread(global_.resources + template, 0)  # 模板
         img2 = cv2.imread(global_.param.capture_img, 0)  # 需要匹配的图片
-
+        img1 = cv2.cvtColor(img1, cv2.COLOR_GRAY2BGR);
+        img2 = cv2.cvtColor(img2, cv2.COLOR_GRAY2BGR);
         flann = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(flann)
         #Log.debug("------->匹配度：",str(max_val))
         if max_val >= 0.9:
             th, tw = img1.shape[:2]
-            if template.find("out") > 0: #解决退出图标太小,2倍缩小尺寸大小的坐标
+            if template.find("out") or template.find("attack") > 0: #解决退出图标太小,2倍缩小尺寸大小的坐标
                 offset_x = int(random.randint(0, tw//2))
                 offset_y = int(random.randint(0, th//2))
                 return max_loc[0] + offset_x, max_loc[1] + offset_y

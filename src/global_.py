@@ -12,11 +12,17 @@ config_path = local + 'config\\'
 
 threads = []
 
+#悬赏封印标识
+rewardFlag = False
+#线程工作标识
 workFlag = False
-
+#窗口集
 window_hwnd_arr = []
+#模块文件名称集
 config_file_arr = []
+#选择模块配置文件
 configs = []
+#选择模块配置中文描述
 configs_dsc = []
 log = None
 

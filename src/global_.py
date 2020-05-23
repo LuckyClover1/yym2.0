@@ -11,7 +11,8 @@ resources = local + 'resources\\'
 config_path = local + 'config\\'
 
 threads = []
-
+#挑战场次
+challengeNum = 9999
 #悬赏封印标识
 rewardFlag = False
 #线程工作标识

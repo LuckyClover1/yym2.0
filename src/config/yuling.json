@@ -1,0 +1,46 @@
+{
+    "module_type": "yuling.json-御灵",
+    "start_module": {
+        "describe": "御灵流程：挑战->战斗中->(失败->失败结算->再次挑战；胜利->胜利结算->奖励领取->再次挑战)",
+        "start_module": "check_challenge"
+    },
+    "check_challenge":{
+        "action": "check4",
+        "describe": "开始挑战",
+        "template": "yuling/challenge.bmp",
+        "next_action": "sleep"
+    },
+    "sleep":{
+        "action": "sleep",
+        "describe": "挑战中，请耐心等待",
+        "time_":27,
+        "next_action": "check_fail"
+    },
+    "check_fail": {
+        "action": "check4",
+        "describe": "失败结算",
+        "template": "yuling/fail.bmp",
+        "callback": "check_close",
+        "next_action": "check_challenge"
+    },
+    "check_close": {
+        "action": "check4",
+        "describe": "体力购买",
+        "template": "yuling/close.bmp",
+        "callback": "check_victory",
+        "next_action": "check_rewards"
+    },
+    "check_victory":{
+        "action": "check4",
+        "describe": "胜利结算",
+        "template": "yuhun/end1.bmp,yuhun/end2.bmp",
+        "callback": "check_fail",
+        "next_action": "check_rewards"
+    },
+    "check_rewards":{
+        "action": "check4",
+        "describe": "奖励领取",
+        "template": "yuhun/end3.bmp",
+        "next_action": "check_challenge"
+    }
+}

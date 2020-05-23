@@ -92,7 +92,7 @@ def match_template(template):
         return 0, 0
 
 #探索匹配规则-离队状态
-def match_template2(template):
+def match_template_team(template):
     if template.find(",") > 0:
         tems = template.split(",")
         i = 0

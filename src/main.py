@@ -14,11 +14,12 @@ from src.tklog import Log
 from src.img import *
 
 class MyThread(threading.Thread):
-    def __init__(self, thread_name, config, hwnd):
+    def __init__(self, thread_name, config, hwnd, challengeNum):
         threading.Thread.__init__(self)
         self.thread_name = thread_name
         self.config = config
         self.hwnd = hwnd
+        self.challengeNum = challengeNum
 
     def run(self):
 
@@ -26,6 +27,8 @@ class MyThread(threading.Thread):
         global_.param.thread_name = self.thread_name
         Log.debug("------->线程开始启动...")
         global_.param.hwnd = self.hwnd
+        global_.param.count = 0
+        global_.param.challengeNum = self.challengeNum
         global_.param.capture_img = global_.capture_img_path + "capture-" + self.thread_name + ".bmp"
         init_modules(self.thread_name, self.config)
         reset_windows_size()
@@ -45,7 +48,7 @@ def create_threads():
     thread_num = 0
     for config in config_arr:
         use_config = config["use_json"]
-        global_.threads.append(MyThread("thread-" + str(thread_num.__str__()), use_config, int(config["window"])))
+        global_.threads.append(MyThread("thread-" + str(thread_num.__str__()), use_config, int(config["window"]), global_.challengeNum))
         global_.reward_threads.append("thread-" + str(thread_num) + "," + str(config["window"]))#悬赏封印
         thread_num = thread_num + 1
 
@@ -58,12 +61,12 @@ def stop():
 # 启动线程
 def start_work():
     for thread in global_.threads:
-        print(global_.reward_threads)
         thread.start()
 
     if global_.rewardFlag:
         for reward_thread in global_.reward_threads:
             thread_name = reward_thread.split(",")[0]
+            thread_name = thread_name + "-reward"
             hwnd = reward_thread.split(",")[1]
             #同时运行悬赏封印线程
             t = threading.Thread(target=check_reward, args=(thread_name, hwnd))
@@ -131,7 +134,7 @@ def check_reward(thread_name, hwnd):
         reward = "template/reward.bmp"
         global_.param.thread_name = thread_name
         global_.param.capture_img = global_.capture_img_path + "capture-" + thread_name + ".bmp"
-        print(global_.param.capture_img)
+        #print(global_.param.capture_img)
         global_.param.hwnd = int(hwnd)
         window_capture()
         point = match_template(reward)
@@ -143,8 +146,8 @@ def check_reward(thread_name, hwnd):
             point = match_template(reward)
         #匹配上时进行点击
         while point[0] > 0 and point[1] > 0 and global_.workFlag:  # 匹配上后进行点击，当界面未跳转时继续点击
-            time.sleep(0.5)
             move_click(point)
+            time.sleep(0.5)
             window_capture()
             point = match_template(reward)
         Log.debug("------->【悬赏封印】结束！")

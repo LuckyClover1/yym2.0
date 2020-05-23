@@ -85,17 +85,16 @@ class Setting:
         self.configs = {}
         self.window = None
         self.config = None
-        self.window_des = {}
-        self.config_des = {}
-        self.configs_des = {}
+        self.window_des = {}#游戏窗口：窗口1：322323
+        self.config_des = {}#游戏模式：御魂/日轮(队员)：yuhun_duiyuan.json
+        self.configs_des = {}#选择的配置信息：窗口1：御魂/日轮(队员)
 
     def display(self):
         self.frame = Frame(self.master)
         # Button(self.frame, text="刷新/加载", command=lambda: reload(self)).place(x=5, y=5, width=60, height=25)
-        Label(self.frame, text="----------请选择以下游戏窗口和游戏模式----------",).place(x=5, y=5, width=400, height=25)
+        Label(self.frame, text="----------请选择以下【游戏窗口】和【游戏模式】----------",).place(x=5, y=5, width=400, height=25)
         Label(self.frame, text="游戏窗口：").place(x=5, y=30, width=60, height=25)
         Label(self.frame, text="游戏模式：").place(x=250, y=30, width=60, height=25)
-
 
         list_box_window = Listbox(self.frame, selectmode=SINGLE)
         if len(global_.window_hwnd_arr) > 0: #窗口id
@@ -119,11 +118,27 @@ class Setting:
                 i = i + 1
         list_box_config.bind('<ButtonRelease-1>', self.select_config)
         list_box_config.place(x=250, y=50, width=200, height=150)
-        Button(self.frame, text="重置", command=lambda: reload(self)).place(x=5, y=200, width=70, height=30)
-        Label(self.frame, text="已选择的游戏模式：", font=("微软雅黑", 9), fg='blue').place(x=5, y=230, width=120, height=20)
-        Label(self.frame, text="御魂模式：\n【队长】组队完成一轮，默认邀请队友后，在组队界面运行程序！\n【队员】组队完成一轮，接受邀请后，运行程序！", anchor=NW, fg='red', justify='left').place(x=5, y=360, width=350, height=90)
+
+        input = IntVar
+        v1 = IntVar()
+        v2 = IntVar()
+        en = Entry(self.frame, textvariable=input)
+        en.select_clear()
+        en.place(x=200, y=205, width=40, height=20)
+        checkbutton1 = Checkbutton(self.frame, variable=v1, text="领取悬赏封印", command=lambda: callCheckbutton1(v1))
+        checkbutton1.deselect()
+        checkbutton1.place(x=5, y=200, width=100, height=30)
+        checkbutton2 = Checkbutton(self.frame, variable=v2, text="挑战场次：", command=lambda: callCheckbutton2(v2, en))
+        checkbutton2.deselect()
+        checkbutton2.place(x=120, y=200, width=80, height=30)
+        Button(self.frame, text="重置", command=lambda: reload(self)).place(x=5, y=230, width=70, height=30)
+
+        Label(self.frame, text="已选择的游戏模式：", font=("微软雅黑", 9), fg='blue').place(x=5, y=260, width=120, height=20)
+        Label(self.frame, text="御魂/日轮单开模式：\n【队长】组队完成一轮，默认邀请队友后，在组队界面，启动程序！\n【队员】组队完成一轮，接受邀请后，启动程序！", anchor=NW, fg='red', justify='left').place(x=5, y=340, width=450, height=60)
+        Label(self.frame, text="御魂/日轮双开模式：\n 选择队长和队员游戏模式后，组队完成一轮，邀请/接受后，启动程序！", anchor=NW, fg='red', justify='left').place(x=5, y=400, width=450, height=50)
         show_selected_config(self.frame)
         self.frame.place(x=5, y=5, width=495, height=495)
+
 
     def destroy(self):
         self.frame.destroy()
@@ -143,18 +158,39 @@ class Setting:
         config = self.config_des[config_dsc]
         key = self.window_des[str(self.window)]
         self.configs.update({key: dict(window=key, use_json=config)})
-        self.configs_des.update({key: dict(window=str(key) + "-" + self.window, use_json=config + "-" + config_dsc)})
+        #self.configs_des.update({key: dict(window=str(key) + "-" + self.window, use_json=config + "-" + config_dsc)})
+        self.configs_des.update({key: dict(window=self.window, use_json=config_dsc)})
         global_.configs = self.configs.values()
         global_.configs_dsc = self.configs_des.values()
         show_selected_config(self.frame)
 
+#多选框
+def callCheckbutton1(v1):
+    if v1.get() == 1:
+        global_.rewardFlag = True #悬赏封印
+    else:
+        global_.rewardFlag = False #悬赏封印
+
+#多选框
+def callCheckbutton2(v2, en):
+    if v2.get() == 1:
+        if en.get() == "":
+            messagebox.showinfo("", "请输入挑战场次！")
+            global_.challengeNum = 9999 #场次
+            v2.set(0)
+        else:
+            global_.challengeNum = int(en.get()) #场次
+    else:
+        global_.challengeNum = 9999
+    print("挑战场次："+str(global_.challengeNum))
 
 def show_selected_config(config_frame):
     i = 0
     for value in global_.configs_dsc:
-        text = value["window"].split("-")[1] + " : " + value["use_json"].split("-")[1]
+        text = value["window"] + " : " + value["use_json"]
+        #text = value["window"].split("-")[1] + " : " + value["use_json"].split("-")[1]
         #Label.pack_forget(config_frame)
-        Label(config_frame, text=text, anchor=NW, fg='blue').place(x=5, y=250 + 20*i, width=300, height=20)
+        Label(config_frame, text=text, anchor=NW, fg='blue').place(x=5, y=280 + 20*i, width=300, height=20)
         i = i + 1
 
 
@@ -169,6 +205,8 @@ def create_ui():
 
 
 def reload(self):
+    global_.rewardFlag = False #悬赏封印
+    global_.challengeNum = 9999 #挑战场次
     global_.config_file_arr = []
     global_.window_hwnd_arr = []
     global_.configs_dsc = {}

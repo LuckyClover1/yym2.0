@@ -17,8 +17,16 @@
         "describe": "检测是否离队探索",
         "template": "exploring/team.bmp,exploring/exploring.bmp",
         "true": "check_out",
+        "false": "check_out_exploring",
+        "remarks": "离队中->退出探索；队伍中->是否退出探索"
+    },
+	"check_out_exploring":{
+        "action": "check2",
+        "describe": "检测是否退出探索",
+        "template": "exploring/out_exploring.bmp",
+        "true": "check_invitation",
         "false": "check_ready",
-        "remarks": "离队中->退出探索；队伍中->准备/战斗"
+        "remarks": "退出探索->接受邀请；队伍中->准备/战斗"
     },
     "check_out":{
         "action": "check2",

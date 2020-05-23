@@ -1,5 +1,5 @@
 {
-    "module_type": "yuhun_duiyuan.json-御魂(队员)",
+    "module_type": "yuhun_duiyuan.json-御魂/日轮(队员)",
     "start_module": {
         "describe": "御魂流程：胜利结算->奖励领取->下轮等待->胜利结算...",
         "start_module": "check_victory"
@@ -19,7 +19,7 @@
     "sleep":{
         "action": "sleep",
         "describe": "一轮结束，休息会...",
-        "time_":20,
+        "time_":24,
         "next_action": "check_victory"
     }
 }

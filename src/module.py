@@ -74,6 +74,14 @@ class Module(object):
             point = match_template(self.template)
 
         Log.debug("------->【", self.describe, "】完成，进行下一步...")
+        if self.template.find("end3") > 0: #奖励领取后算完成一次，场次数加1
+            global_.param.count = global_.param.count + 1
+            global_.param.challengeNum = global_.param.challengeNum - 1
+            Log.debug("===============>【已完成"+str(global_.param.count)+"场次挑战】<===============")
+        if global_.param.challengeNum == 0: #挑战场次结束
+            global_.workFlag = False
+            global_.rewardFlag = False
+
         return self.next_action
 
     #探索检测方法
@@ -82,12 +90,12 @@ class Module(object):
         window_capture()
         point = None
         if self.template.find("team.bmp") > 0:
-            point = match_template2(self.template)
+            point = match_template_team(self.template)#是否离队状态
         else:
             point = match_template(self.template)
-        if point[0] == 0 and point[1] == 0 and global_.workFlag:  # 沒匹配上
+        if point[0] == 0 and point[1] == 0 and global_.workFlag:  # 沒匹配上/未离队
             time.sleep(0.5)
-            if self.callback is not None: #当有回调时，说明是准备/战斗事件，3次检测未进入战斗状态->检测是否离队
+            if self.callback is not None: #当有回调时，说明是准备/战斗事件，3次检测未进入战斗状态->检测是否离队      
                 i = 0
                 while i < 2:
                     Log.debug("------->【", self.describe, "】", str(2+i), "次开始匹配...")
@@ -98,8 +106,8 @@ class Module(object):
                     else:
                         while point[0] > 0 and point[1] > 0 and global_.workFlag:
                             Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
-                            time.sleep(0.5)
                             move_click(point)
+                            time.sleep(0.5)
                             window_capture()
                             point = match_template(self.template)
                             Log.debug("------->【", self.describe, "】完成，进行下一步...")
@@ -108,15 +116,16 @@ class Module(object):
                 return self.callback
             return self.false
         else:
-            if self.template.find("team.bmp") > 0: #当离队时，无需点击，
+            if self.template.find("team.bmp") > 0 or self.template.find("out_exploring.bmp"): #当离队或退出探索时，无需点击
                 Log.debug("------->【", self.describe, "】完成，进行下一步...")
                 return self.true
+
             if self.template.find("out.bmp") > 0: #检测到退出按钮后,由于点击退出后界面不跳转，退出按钮还存在，只需要点击2次就行
                 i = 0
                 while i < 2 and global_.workFlag :
                     Log.debug("------->【", self.describe, "】匹配成功，", str(i), "次进行点击...")
-                    time.sleep(0.5)
                     move_click(point)
+                    time.sleep(0.5)
                     window_capture()
                     point = match_template(self.template)
                     i = i + 1
@@ -124,8 +133,8 @@ class Module(object):
                 return self.true
             while point[0] > 0 and point[1] > 0 and global_.workFlag:
                 Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
-                time.sleep(0.5)
                 move_click(point)
+                time.sleep(0.5)
                 window_capture()
                 point = match_template(self.template)
 
@@ -148,12 +157,8 @@ class Module(object):
         #匹配上时进行点击
         while point[0] > 0 and point[1] > 0 and global_.workFlag:
             Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
-            time.sleep(0.5)
-            if self.template.find("attack") > 0:
-                print(point)
             move_click(point)
-            if self.template.find("medal") > 0: #突破时，只点击一次，就弹出进攻界面
-                return self.next_action
+            time.sleep(0.5)
             window_capture()
             point = match_template(self.template)
 
@@ -187,7 +192,6 @@ class Module(object):
         return self.next_action
 
     def sleep(self):
-        Log.debug("=======》任务完成！线程等待中...")
         time.sleep(self.time_)
         return self.next_action
 

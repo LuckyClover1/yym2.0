@@ -11,6 +11,8 @@ resources = local + 'resources\\'
 config_path = local + 'config\\'
 
 threads = []
+
+threeFlag  = False
 #挑战场次
 challengeNum = 9999
 #悬赏封印标识

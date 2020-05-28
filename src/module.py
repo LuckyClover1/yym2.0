@@ -68,9 +68,22 @@ class Module(object):
         #匹配上时进行点击
         while point[0] > 0 and point[1] > 0 and global_.workFlag:
             Log.debug("------->【", self.describe, "】匹配成功，进行点击...")
+            #三人组队，队员都进队后开始挑战
+            if self.template.find("start") > 0 and global_.threeFlag:
+                addtemplate = "yuhun/add.bmp"
+                addpoint = match_template(addtemplate)
+                while addpoint[0] > 0 and addpoint[1] > 0 and global_.workFlag:
+                    Log.debug("------->【等待队员】...")
+                    time.sleep(0.5)
+                    window_capture()
+                    addpoint = match_template(addtemplate)
             move_click(point)
             time.sleep(0.5)
             window_capture()
+            if self.template.find("end1") > 0: #修复因领取悬赏封印而错过胜利结算，卡在结算阶段的问题。
+                point1 = match_template("yuhun/end3.bmp")
+                if point1[0] > 0 and point1[1] > 0 and global_.workFlag:
+                    return self.next_action
             point = match_template(self.template)
 
         Log.debug("------->【", self.describe, "】完成，进行下一步...")
@@ -116,7 +129,7 @@ class Module(object):
                 return self.callback
             return self.false
         else:
-            if self.template.find("team.bmp") > 0 or self.template.find("out_exploring.bmp"): #当离队或退出探索时，无需点击
+            if self.template.find("team.bmp") > 0 or self.template.find("out_exploring.bmp") > 0: #当离队或退出探索时，无需点击
                 Log.debug("------->【", self.describe, "】完成，进行下一步...")
                 return self.true
 

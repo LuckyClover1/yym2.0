@@ -119,18 +119,27 @@ class Setting:
         list_box_config.bind('<ButtonRelease-1>', self.select_config)
         list_box_config.place(x=250, y=50, width=200, height=150)
 
-        input = IntVar
-        v1 = IntVar()
-        v2 = IntVar()
-        en = Entry(self.frame, textvariable=input)
-        en.select_clear()
-        en.place(x=200, y=205, width=40, height=20)
-        checkbutton1 = Checkbutton(self.frame, variable=v1, text="领取悬赏封印", command=lambda: callCheckbutton1(v1))
+        rewardInt = IntVar()
+        checkbutton1 = Checkbutton(self.frame, variable=rewardInt, text="领取悬赏封印", command=lambda: callCheckReward(rewardInt))
         checkbutton1.deselect()
         checkbutton1.place(x=5, y=200, width=100, height=30)
-        checkbutton2 = Checkbutton(self.frame, variable=v2, text="挑战场次：", command=lambda: callCheckbutton2(v2, en))
+
+        threeInt = IntVar()
+        checkbutton1 = Checkbutton(self.frame, variable=threeInt, text="三人组队", command=lambda: callCheckThreeTeam(threeInt))
+        checkbutton1.deselect()
+        checkbutton1.place(x=110, y=200, width=80, height=30)
+
+        #挑战场次输入框
+        challengeNum = IntVar
+        en = Entry(self.frame, textvariable=challengeNum)
+        en.select_clear()
+        en.place(x=280, y=205, width=40, height=20)
+
+        challengeInt = IntVar()
+        checkbutton2 = Checkbutton(self.frame, variable=challengeInt, text="挑战场次：", command=lambda: callCheckChallengeNum(challengeInt, en))
         checkbutton2.deselect()
-        checkbutton2.place(x=120, y=200, width=80, height=30)
+        checkbutton2.place(x=200, y=200, width=80, height=30)
+
         Button(self.frame, text="重置", command=lambda: reload(self)).place(x=5, y=230, width=70, height=30)
 
         Label(self.frame, text="已选择的游戏模式：", font=("微软雅黑", 9), fg='blue').place(x=5, y=260, width=120, height=20)
@@ -145,8 +154,6 @@ class Setting:
 
     def select_window(self, event):
         window = event.widget.get(event.widget.curselection()[0])
-        # window = window.replace("window:", "")
-        #window = self.window_des[window]
         active_window(int(self.window_des[window])) #激活窗口 --ui
         self.window = window
 
@@ -158,28 +165,34 @@ class Setting:
         config = self.config_des[config_dsc]
         key = self.window_des[str(self.window)]
         self.configs.update({key: dict(window=key, use_json=config)})
-        #self.configs_des.update({key: dict(window=str(key) + "-" + self.window, use_json=config + "-" + config_dsc)})
         self.configs_des.update({key: dict(window=self.window, use_json=config_dsc)})
         global_.configs = self.configs.values()
         global_.configs_dsc = self.configs_des.values()
         show_selected_config(self.frame)
 
-#多选框
-def callCheckbutton1(v1):
-    if v1.get() == 1:
-        global_.rewardFlag = True #悬赏封印
+#悬赏封印
+def callCheckReward(v):
+    if v.get() == 1:
+        global_.rewardFlag = True
     else:
-        global_.rewardFlag = False #悬赏封印
+        global_.rewardFlag = False
 
-#多选框
-def callCheckbutton2(v2, en):
-    if v2.get() == 1:
+#三人组队
+def callCheckThreeTeam(v):
+    if v.get() == 1:
+        global_.threeFlag = True
+    else:
+        global_.threeFlag = False
+
+#挑战场次
+def callCheckChallengeNum(v, en):
+    if v.get() == 1:
         if en.get() == "":
             messagebox.showinfo("", "请输入挑战场次！")
-            global_.challengeNum = 9999 #场次
-            v2.set(0)
+            global_.challengeNum = 9999
+            v.set(0)
         else:
-            global_.challengeNum = int(en.get()) #场次
+            global_.challengeNum = int(en.get())
     else:
         global_.challengeNum = 9999
     print("挑战场次："+str(global_.challengeNum))
@@ -205,6 +218,7 @@ def create_ui():
 
 
 def reload(self):
+    global_.threeFlag = False #悬赏封印
     global_.rewardFlag = False #悬赏封印
     global_.challengeNum = 9999 #挑战场次
     global_.config_file_arr = []
